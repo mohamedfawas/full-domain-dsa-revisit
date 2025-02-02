@@ -1,75 +1,85 @@
 package main
 
-// countSubstrings counts all palindromic substrings in a given string
-// For example, if s = "aaa":
-// - Single characters: "a", "a", "a" (all single characters are palindromes)
-// - Two characters: "aa", "aa" (we check positions 0,1 and 1,2)
-// - Three characters: "aaa" (we check the whole string)
-// Total count would be 6
+// countSubstrings counts the total number of palindromic substrings in the given string
+// A palindrome is a string that reads the same forwards and backwards
+// For example: in string "aaa", palindromes are "a", "a", "a", "aa", "aa", "aaa"
 func countSubstrings(s string) int {
-	// Initialize our counter for palindromes
-	count := 0
+	// Initialize total count of palindromes
+	// Every single character is a palindrome by itself,
+	// so we'll find more as we expand around centers
+	totalCount := 0
 
-	// For each character in the string, we'll try to expand around it
-	// to find all possible palindromes
+	// Helper function to count palindromes by expanding around a center
+	// It takes left and right indices and expands outward while characters match
+	expandAroundCenter := func(left, right int) {
+		// Keep expanding as long as:
+		// 1. left index doesn't go below 0
+		// 2. right index doesn't exceed string length
+		// 3. characters at both positions match
+		for left >= 0 && right < len(s) && s[left] == s[right] {
+			// We found a palindrome! Increment our count
+			totalCount++
+
+			// Move outward in both directions to check for larger palindromes
+			left--
+			right++
+		}
+	}
+
+	// Iterate through each character as potential center
 	for i := 0; i < len(s); i++ {
-		// Handle odd-length palindromes
-		// Example: for "aba", we start at 'b' and expand outwards
-		expandAroundCenter(s, i, i, &count)
+		// For each position, we need to check two types of palindromes:
 
-		// Handle even-length palindromes
-		// Example: for "abba", we start between the two 'b's
-		expandAroundCenter(s, i, i+1, &count)
+		// 1. Odd length palindromes (single character center)
+		// Example: For "aba", center is 'b'
+		expandAroundCenter(i, i)
+
+		// 2. Even length palindromes (between two characters)
+		// Example: For "aa", center is between both 'a's
+		expandAroundCenter(i, i+1)
 	}
 
-	return count
+	return totalCount
 }
 
-// expandAroundCenter checks if we have a palindrome by expanding around a center point
-// Parameters:
-// - s: the input string
-// - left: left pointer starting position
-// - right: right pointer starting position
-// - count: pointer to our counter to update when we find palindromes
-func expandAroundCenter(s string, left int, right int, count *int) {
-	// Keep expanding outwards as long as:
-	// 1. We haven't reached the string boundaries
-	// 2. Characters at both ends match
-	for left >= 0 && right < len(s) && s[left] == s[right] {
-		// We found a palindrome! Increment our counter
-		*count++
-
-		// Move outwards to check for larger palindromes
-		// Example: if we found "aba" is a palindrome,
-		// next we check if "xabax" is also a palindrome
-		left--
-		right++
-	}
-}
-
+// Let's see how it works with examples:
 /*
-Let's walk through an example: s = "aaa"
+Example 1: s = "abc"
+- For position 0 ('a'):
+  * Odd length: "a" (count = 1)
+  * Even length: no palindrome with 'a' and 'b'
+- For position 1 ('b'):
+  * Odd length: "b" (count = 2)
+  * Even length: no palindrome with 'b' and 'c'
+- For position 2 ('c'):
+  * Odd length: "c" (count = 3)
+  * Even length: no palindrome (out of bounds)
+Total count = 3
 
-1. First iteration (i = 0):
-   - Odd-length: starts at 'a' (index 0)
-     * "a" is a palindrome (count = 1)
-   - Even-length: starts between index 0 and 1
-     * "aa" is a palindrome (count = 2)
-
-2. Second iteration (i = 1):
-   - Odd-length: starts at 'a' (index 1)
-     * "a" is a palindrome (count = 3)
-   - Even-length: starts between index 1 and 2
-     * "aa" is a palindrome (count = 4)
-
-3. Third iteration (i = 2):
-   - Odd-length: starts at 'a' (index 2)
-     * "a" is a palindrome (count = 5)
-   - Even-length: starts between index 2 and 3
-     (this won't find anything as we're at the end)
-
-Note: During these iterations, when we check odd-length palindromes
-at index 1, we also find "aaa" as we expand outwards (count = 6)
-
-Final count: 6 palindromes
+Example 2: s = "aaa"
+- For position 0 (first 'a'):
+  * Odd length: "a" (count = 1)
+  * Even length: "aa" (count = 2)
+- For position 1 (second 'a'):
+  * Odd length: "a" (count = 3)
+  * Even length: "aa" (count = 4)
+- For position 2 (third 'a'):
+  * Odd length: "a" (count = 5)
+  * Even length: no palindrome (out of bounds)
+- Additionally, "aaa" is found when expanding from center position 1
+  (count = 6)
+Total count = 6
 */
+
+// Step by step visualization for "aaa":
+// 1. Start with empty count = 0
+// 2. At index 0:
+//    - Check "a" (odd length) ✓ count = 1
+//    - Check "aa" (even length) ✓ count = 2
+// 3. At index 1:
+//    - Check "a" (odd length) ✓ count = 3
+//    - Check "aa" (even length) ✓ count = 4
+//    - While expanding odd length, find "aaa" ✓ count = 5
+// 4. At index 2:
+//    - Check "a" (odd length) ✓ count = 6
+//    - Check even length (no valid palindrome)
