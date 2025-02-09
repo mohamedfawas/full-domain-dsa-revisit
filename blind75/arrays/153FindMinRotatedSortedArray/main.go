@@ -20,16 +20,16 @@ func findMin(nums []int) int {
 
 	// Binary search implementation
 	// We keep searching until left and right pointers meet
-	for left <= right {
+	for left < right {
 		// Calculate middle index
 		// Example: If left = 0 and right = 4, mid = 2
-		mid := (left + right) / 2
+		mid := left + (right-left)/2
 
 		// If middle element is greater than next element
 		// we found the pivot point (minimum element)
 		// Example: nums = [3,4,5,1,2], when mid = 2:
 		// nums[2] = 5 > nums[3] = 1, so return 1
-		if mid < len(nums)-1 && nums[mid] > nums[mid+1] {
+		if nums[mid] > nums[mid+1] {
 			return nums[mid+1]
 		}
 
@@ -37,7 +37,7 @@ func findMin(nums []int) int {
 		// we found the pivot point (current element is minimum)
 		// Example: nums = [4,5,1,2,3], when mid = 2:
 		// nums[1] = 5 > nums[2] = 1, so return 1
-		if mid > 0 && nums[mid-1] > nums[mid] {
+		if nums[mid-1] > nums[mid] {
 			return nums[mid]
 		}
 
