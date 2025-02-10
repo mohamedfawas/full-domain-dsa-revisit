@@ -49,11 +49,11 @@ func (q *Queue) Dequeue() (int, error) {
 		// Example: stackInput [1,2,3] becomes stackOutput [3,2,1]
 		for len(q.stackInput) > 0 {
 			// Get the last element from stackInput
-			top := q.stackInput[len(q.stackInput)-1]
+			last := q.stackInput[len(q.stackInput)-1]
 			// Remove it from stackInput (slice up to last element)
 			q.stackInput = q.stackInput[:len(q.stackInput)-1]
 			// Add it to stackOutput
-			q.stackOutput = append(q.stackOutput, top)
+			q.stackOutput = append(q.stackOutput, last)
 		}
 	}
 
