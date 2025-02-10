@@ -1,3 +1,7 @@
+package main
+
+import "errors"
+
 // Package provides a Queue implementation using two stacks
 // This is an efficient way to implement a queue using two stacks
 // where one stack is used for enqueueing (stackInput) and another
