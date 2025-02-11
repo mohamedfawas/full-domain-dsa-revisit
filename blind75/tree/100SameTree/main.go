@@ -20,7 +20,7 @@ func isSameTree(p *TreeNode, q *TreeNode) bool {
 	// Example:
 	//   p: [1,2], q: [1,null,2]
 	//   When comparing p.Left (2) with q.Left (nil) -> return false
-	if (p == nil && q != nil) || (p != nil && q == nil) {
+	if p == nil || q == nil {
 		return false
 	}
 
