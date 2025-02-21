@@ -45,7 +45,7 @@ func findMin(nums []int) int {
 		// minimum lies in right half
 		// Example: nums = [4,5,6,1,2], when mid = 2:
 		// nums[2] = 6 > nums[0] = 4, so search right half
-		if nums[mid] > nums[0] {
+		if nums[mid] > nums[left] {
 			left = mid + 1
 		} else {
 			// Otherwise, minimum lies in left half
