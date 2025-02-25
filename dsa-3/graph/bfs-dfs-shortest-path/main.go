@@ -86,6 +86,68 @@ func (g *Graph) BFS(start int) {
 	fmt.Println()
 }
 
+// ShortestPath finds the shortest path distance from start to end using BFS.
+// It returns the number of edges in the shortest path or -1 if no path exists.
+func (g *Graph) ShortestPath(start, end int) int {
+	// Check if the start or end vertices exist in the graph.
+	// If either vertex doesn't exist, return -1 (no path).
+	// Example: If the graph has vertices {1: [2], 2: [1]}, and start=3, return -1.
+	if _, exists := g.vertices[start]; !exists {
+		return -1
+	}
+	if _, exists := g.vertices[end]; !exists {
+		return -1
+	}
+
+	// If the start and end vertices are the same, the distance is 0.
+	// Example: If start=2 and end=2, return 0.
+	if start == end {
+		return 0
+	}
+
+	// Initialize BFS:
+	// - queue: A slice to store vertices to visit next. Start with the start vertex.
+	// - distance: A map to store the shortest distance from start to each vertex.
+	// Example: If start=1, queue = [1], distance = {1: 0}.
+	queue := []int{start}
+	distance := make(map[int]int)
+	distance[start] = 0
+
+	// Process the queue until it's empty.
+	for len(queue) > 0 {
+		// Get the first vertex from the queue (current vertex).
+		// Example: If queue = [1, 2], current = 1, and queue becomes [2].
+		current := queue[0]
+		queue = queue[1:]
+
+		// Explore all neighbors of the current vertex.
+		// Example: If current=1 and neighbors=[2, 3], loop through 2 and 3.
+		for _, neighbor := range g.vertices[current] {
+			// If the neighbor is the end vertex, return the distance.
+			// Distance to end = distance to current + 1.
+			// Example: If current=2, neighbor=3, and end=3, return distance[2] + 1.
+			if neighbor == end {
+				return distance[current] + 1
+			}
+
+			// Check if the neighbor has been visited.
+			// If not visited, add it to the queue and update its distance.
+			// Example: If neighbor=3 and it's not in the distance map:
+			// - distance[3] = distance[2] + 1
+			// - queue = [3]
+			if _, visited := distance[neighbor]; !visited {
+				distance[neighbor] = distance[current] + 1
+				queue = append(queue, neighbor)
+			}
+		}
+	}
+
+	// If the queue is empty and we haven't found the end vertex, it's unreachable.
+	// Return -1 to indicate no path exists.
+	// Example: If start=1 and end=4, but 4 is not connected to 1, return -1.
+	return -1
+}
+
 // Example usage
 func main() {
 	// Create a new graph
